@@ -2,8 +2,10 @@ package main
 
 import (
 	"net/http"
+	"sample-api/database"
 	"sample-api/server"
 	"sample-api/src/controllers"
+	"sample-api/src/repositories"
 	"sample-api/src/services"
 
 	"github.com/gin-gonic/gin"
@@ -28,15 +30,19 @@ func main() {
 		})
 	})
 
-	//initilize user service and controller
-	userService := services.NewUserService()
+	//initilize db
+	db := database.InitDd()
+
+	//initilize user services,controllers and repositories
+	userRepo := repositories.NewUserRepository(db)
+	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
 
 	prefix.POST("/users", userController.SaveUser)
 	prefix.GET("/users", userController.GetAllUsers)
-	prefix.GET("/users/:id", userController.GetUserById)
-	prefix.PUT("/users/:id", userController.UpdateUser)
-	prefix.DELETE("/users/:id", userController.DeleteUser)
+	prefix.GET("/users/:id/user", userController.GetUserById)
+	prefix.PUT("/users/:id/update-user", userController.UpdateUser)
+	prefix.DELETE("/users/:id/delete-user", userController.DeleteUser)
 
 	//start the server on port 8080
 	s.Run(":8080")

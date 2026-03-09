@@ -5,6 +5,7 @@ import (
 	"sample-api/src/entities"
 )
 
+//user service interface and implementation
 type UserServiceInterface interface {
 	SaveUser(user entities.User) (entities.User, error)
 	GetUserById(id int) (entities.User, error)
@@ -12,6 +13,7 @@ type UserServiceInterface interface {
 	UpdateUser(id int, user entities.User) error
 	DeleteUser(id int) error
 }
+
 
 type UserService struct {
 	users []entities.User
